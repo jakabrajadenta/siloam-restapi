@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,9 +20,40 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @GetMapping("/filter")
+    public Page<EmployeeDto> findAllFilter(EmployeeRequestDto requestDto, Pageable pageable){
+        System.out.println("=============================================================");
+        Long start = System.currentTimeMillis();
+        System.out.println("started at "+LocalDateTime.now());
+        Page<EmployeeDto> response = employeeService.findAllFilter(requestDto, pageable);
+        Long end = System.currentTimeMillis();
+        System.out.println("ended at "+LocalDateTime.now());
+        System.out.println("Time: " + (end-start) + "ms");
+        return response;
+    }
+
+    @GetMapping("/batch")
+    public List<EmployeeDto> findAllBatc(){
+        System.out.println("=============================================================");
+        Long start = System.currentTimeMillis();
+        System.out.println("started at "+LocalDateTime.now());
+        List<EmployeeDto> response = employeeService.findAllBatch();
+        Long end = System.currentTimeMillis();
+        System.out.println("ended at "+LocalDateTime.now());
+        System.out.println("Time: " + (end-start) + "ms");
+        return response;
+    }
+
     @GetMapping
-    public Page<EmployeeDto> findAllEmployee(EmployeeRequestDto requestDto, Pageable pageable){
-        return employeeService.findAll(requestDto, pageable);
+    public List<EmployeeDto> findAll(){
+        System.out.println("=============================================================");
+        Long start = System.currentTimeMillis();
+        System.out.println("started at "+LocalDateTime.now());
+        List<EmployeeDto> response = employeeService.findAll();
+        Long end = System.currentTimeMillis();
+        System.out.println("ended at "+LocalDateTime.now());
+        System.out.println("Time: " + (end-start) + "ms");
+        return response;
     }
 
 }

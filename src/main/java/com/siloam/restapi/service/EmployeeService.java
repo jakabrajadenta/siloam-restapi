@@ -23,7 +23,7 @@ public class EmployeeService {
     @Autowired
     private MapperFacade mapperFacade;
 
-    public Page<EmployeeDto> findAll(EmployeeRequestDto requestDto, Pageable pageable){
+    public Page<EmployeeDto> findAllFilter(EmployeeRequestDto requestDto, Pageable pageable){
         GenericSpecificationService genericSpecificationService = new GenericSpecificationService();
         genericSpecificationService.add(new SearchCriteria<>("id", requestDto.getId(), SearchCriteria.SearchOperation.EQUAL));
         genericSpecificationService.add(new SearchCriteria<>("name", requestDto.getName(), SearchCriteria.SearchOperation.EQUAL));
@@ -31,9 +31,17 @@ public class EmployeeService {
         genericSpecificationService.add(new SearchCriteria<>("jobTitle", requestDto.getJobTitle(), SearchCriteria.SearchOperation.EQUAL));
         genericSpecificationService.add(new SearchCriteria<>("trainerId", requestDto.getTrainerId(), SearchCriteria.SearchOperation.EQUAL));
         genericSpecificationService.add(new SearchCriteria<>("classId", requestDto.getClassId(), SearchCriteria.SearchOperation.EQUAL));
-//        return employeeRepository.findAll().stream().map(employee ->
-//                mapperFacade.map(employee,EmployeeDto.class)).collect(Collectors.toList());
         return employeeRepository.findAll(genericSpecificationService, pageable).map(o ->
                 mapperFacade.map(o,EmployeeDto.class));
+    }
+
+    public List<EmployeeDto> findAllBatch(){
+
+        return null;
+    }
+
+    public List<EmployeeDto> findAll(){
+        return employeeRepository.findAll().stream().map(employee ->
+                mapperFacade.map(employee,EmployeeDto.class)).collect(Collectors.toList());
     }
 }
