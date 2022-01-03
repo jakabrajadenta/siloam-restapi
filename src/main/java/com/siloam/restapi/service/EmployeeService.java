@@ -36,7 +36,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> findAllBatch(){
-
+        employeeRepository.findAll(Pageable.unpaged());
         return null;
     }
 
