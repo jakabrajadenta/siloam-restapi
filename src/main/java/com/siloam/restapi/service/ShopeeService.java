@@ -28,12 +28,19 @@ public class ShopeeService {
     @Autowired
     private ResponseTrackRepository responseTrackRepository;
 
+    private static final String SHOPEE_LOGOUT_URL = "https://shopee.co.id/api/v4/account/logout";
     private static final String SHOPEE_LOGIN_URL = "https://shopee.co.id/api/v4/account/login_by_password";
     private static final String SHOPEE_GET_CART = "https://shopee.co.id/api/v4/cart/get";
 
     private static final String SHOPEE_PHONE_NUMBER = "6282214687574";
     private static final String SHOPEE_PASSWORD = "a83605a6ad5b77aa27bd727673b5159dce99e524d061d94231f9f4a89940a4b3";
     private static final String SHOPEE_SECURITY_DEVICE = "/is6wn8vzqC4L1ZWfvyC4A==|sFirq0y8QglN9xPXbUNrc6kLky7ohMV2VZR9kfc9DCZ+44f4m0VUFdLqb2d137oiFnR/S+L6Q92Tgk/H53zKEI0+GA==|T8asL6lLs+PEMggd|05|3";
+
+    public String logoutShopee() throws JsonProcessingException {
+        var logoutResponse = restTemplate.postForEntity(SHOPEE_LOGOUT_URL,ShopeeLoginRequestDto.builder().build(), String.class);
+        log.info("LogoutResponse -> {}",objectMapper.writeValueAsString(logoutResponse));
+        return objectMapper.writeValueAsString(logoutResponse.getBody());
+    }
 
     public String loginShopee() throws JsonProcessingException {
         var clientIdentifierDto = ShopeeClientIdentifierDto.builder()
@@ -56,7 +63,7 @@ public class ShopeeService {
     }
 
     public String getCartShopee() throws JsonProcessingException {
-        var loginResponse = this.loginShopee();
+        this.loginShopee();
         var cartRequsetDto = ShopeeCartRequestDto.builder()
                 .shopeeTimeFilter(ShopeeTimeFilter.builder().startTime(0).build())
                 .preSelectedItemList(new ArrayList<>())
@@ -71,6 +78,7 @@ public class ShopeeService {
                 .responseCode(Objects.requireNonNull(cartResponse.getBody()).getErrorCode().toString())
                 .responseDescription(cartResponse.getBody().getErrorMessage()).build());
 
+        this.logoutShopee();
         return objectMapper.writeValueAsString(cartResponse.getBody());
     }
 }

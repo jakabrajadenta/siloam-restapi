@@ -21,7 +21,7 @@ public class ShopeeScrapingInterceptor implements ClientHttpRequestInterceptor {
         request.getHeaders().add("User-Agent", USER_AGENT);
         if (cookie != null) request.getHeaders().add(HttpHeaders.COOKIE, cookie);
         ClientHttpResponse response = execution.execute(request, body);
-        cookie = String.join(DELIMITER, Objects.requireNonNull(response.getHeaders().get(HttpHeaders.SET_COOKIE)));
+        if (cookie == null) cookie = String.join(DELIMITER, Objects.requireNonNull(response.getHeaders().get(HttpHeaders.SET_COOKIE)));
         return response;
     }
 }
