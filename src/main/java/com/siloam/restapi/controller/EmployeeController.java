@@ -1,5 +1,6 @@
 package com.siloam.restapi.controller;
 
+import antlr.StringUtils;
 import com.siloam.restapi.dto.EmployeeDto;
 import com.siloam.restapi.dto.EmployeeRequestDto;
 import com.siloam.restapi.service.EmployeeService;
@@ -53,7 +54,29 @@ public class EmployeeController {
         Long end = System.currentTimeMillis();
         System.out.println("ended at "+LocalDateTime.now());
         System.out.println("Time: " + (end-start) + "ms");
+        soutPhoneNumber();
         return response;
     }
 
+    public void soutPhoneNumber(){
+        String ZERO = "0";
+        String bin = "7788";
+        String[] vaNumber = {"7788000812345678","7788008123456789","7788081234567890","7788812345678901"};
+        System.out.println("==========RAW==========");
+        for (String va : vaNumber) {
+            System.out.println(va);
+        }
+        System.out.println("==========001==========");
+        for (String s : vaNumber) {
+            String phoneNumber = s.substring(bin.length());
+            Long noZeroPhoneNumber = Long.valueOf(phoneNumber);
+            System.out.println(ZERO.concat(String.valueOf(noZeroPhoneNumber)));
+        }
+        System.out.println("==========002==========");
+        for (String s : vaNumber) {
+            String phoneNumber = StringUtils.stripFront(s.substring(bin.length()),ZERO);
+            System.out.println(ZERO.concat(String.valueOf(phoneNumber)));
+        }
+        System.out.println("==========003==========");
+    }
 }
