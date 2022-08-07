@@ -19,7 +19,7 @@ import java.util.Objects;
 public class ShopeeService {
 
     @Autowired
-    @Qualifier("scrapingRestTemplate")
+    @Qualifier("shopeeScrapingRestTemplate")
     private RestTemplate restTemplate;
 
     @Autowired

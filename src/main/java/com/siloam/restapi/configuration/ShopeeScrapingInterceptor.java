@@ -10,9 +10,9 @@ import org.springframework.http.client.ClientHttpResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ScrapingInterceptor  implements ClientHttpRequestInterceptor {
+public class ShopeeScrapingInterceptor implements ClientHttpRequestInterceptor {
 
-    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36";
+    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
     private static final String DELIMITER = "";
     private String cookie;
 

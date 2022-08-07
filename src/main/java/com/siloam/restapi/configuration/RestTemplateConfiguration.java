@@ -21,10 +21,10 @@ public class RestTemplateConfiguration {
     }
 
     @Bean()
-    @Qualifier("scrapingRestTemplate")
+    @Qualifier("shopeeScrapingRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplateBuilder()
-                .interceptors(new ScrapingInterceptor())
+                .interceptors(new ShopeeScrapingInterceptor())
                 .build();
     }
 }

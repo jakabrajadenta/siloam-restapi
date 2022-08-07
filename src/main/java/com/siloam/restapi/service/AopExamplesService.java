@@ -1,10 +1,7 @@
 package com.siloam.restapi.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.val;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
