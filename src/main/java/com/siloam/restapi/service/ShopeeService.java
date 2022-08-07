@@ -2,20 +2,17 @@ package com.siloam.restapi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.siloam.restapi.dto.shopee.ShopeeCartRequestDto;
-import com.siloam.restapi.dto.shopee.ShopeeClientIdentifierDto;
-import com.siloam.restapi.dto.shopee.ShopeeLoginRequestDto;
-import com.siloam.restapi.dto.shopee.ShopeeTimeFilter;
+import com.siloam.restapi.dto.shopee.*;
+import com.siloam.restapi.entity.ResponseTrack;
+import com.siloam.restapi.repository.ResponseTrackRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -27,6 +24,9 @@ public class ShopeeService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ResponseTrackRepository responseTrackRepository;
 
     private static final String SHOPEE_LOGIN_URL = "https://shopee.co.id/api/v4/account/login_by_password";
     private static final String SHOPEE_GET_CART = "https://shopee.co.id/api/v4/cart/get";
@@ -45,19 +45,31 @@ public class ShopeeService {
                 .build();
 
         log.info("LoginRequest -> {}",objectMapper.writeValueAsString(loginRequestDto));
-        var loginResponse = restTemplate.postForEntity(
-                SHOPEE_LOGIN_URL,loginRequestDto,String.class);
+        var loginResponse = restTemplate.postForEntity(SHOPEE_LOGIN_URL,loginRequestDto, ShopeeLoginResponseDto.class);
         log.info("LoginResponse -> {}",objectMapper.writeValueAsString(loginResponse));
+        responseTrackRepository.save(ResponseTrack.builder().url(SHOPEE_LOGIN_URL)
+                .responseStatus(loginResponse.getStatusCode().toString())
+                .responseCode(Objects.requireNonNull(loginResponse.getBody()).getErrorCode().toString())
+                .responseDescription(loginResponse.getBody().getData().getUserId().toString()).build());
 
+        return objectMapper.writeValueAsString(loginResponse.getBody());
+    }
+
+    public String getCartShopee() throws JsonProcessingException {
+        var loginResponse = this.loginShopee();
         var cartRequsetDto = ShopeeCartRequestDto.builder()
                 .shopeeTimeFilter(ShopeeTimeFilter.builder().startTime(0).build())
                 .preSelectedItemList(new ArrayList<>())
                 .version(3)
                 .build();
+
         log.info("CartRequest -> {}",objectMapper.writeValueAsString(cartRequsetDto));
-        var cartResponse = restTemplate.postForEntity(
-                SHOPEE_GET_CART, cartRequsetDto,String.class);
+        var cartResponse = restTemplate.postForEntity(SHOPEE_GET_CART, cartRequsetDto,ShopeeCartResponseDto.class);
         log.info("CartResponse -> {}",objectMapper.writeValueAsString(cartResponse));
+        responseTrackRepository.save(ResponseTrack.builder().url(SHOPEE_GET_CART)
+                .responseStatus(cartResponse.getStatusCode().toString())
+                .responseCode(Objects.requireNonNull(cartResponse.getBody()).getErrorCode().toString())
+                .responseDescription(cartResponse.getBody().getErrorMessage()).build());
 
         return objectMapper.writeValueAsString(cartResponse.getBody());
     }
