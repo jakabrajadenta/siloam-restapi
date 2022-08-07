@@ -20,7 +20,8 @@ public class RestTemplateConfiguration {
                 .build();
     }
 
-    @Bean("scrapingRestTemplate")
+    @Bean()
+    @Qualifier("scrapingRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplateBuilder()
                 .interceptors(new ScrapingInterceptor())
