@@ -8,11 +8,16 @@ import com.siloam.restapi.repository.ResponseTrackRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -58,6 +63,13 @@ public class ShopeeService {
                 .responseStatus(loginResponse.getStatusCode().toString())
                 .responseCode(Objects.requireNonNull(loginResponse.getBody()).getErrorCode().toString())
                 .responseDescription(loginResponse.getBody().getData().getUserId().toString()).build());
+
+        var responseExtractor = new ResponseExtractor<>(){
+            @Override
+            public Object extractData(ClientHttpResponse response) throws IOException {
+                return Objects.requireNonNull(response.getHeaders().get(HttpHeaders.SET_COOKIE)).stream().sorted().collect(Collectors.joining());
+            }
+        };
 
         return objectMapper.writeValueAsString(loginResponse.getBody());
     }
