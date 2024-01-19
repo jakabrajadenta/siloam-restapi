@@ -14,8 +14,18 @@ public class ShopeeController {
     @Autowired
     private ShopeeService shopeeService;
 
-    @GetMapping("/carts")
+    @GetMapping("/login")
     public String loginShopee() throws JsonProcessingException {
+        return shopeeService.loginShopee();
+    }
+
+    @GetMapping("/logout")
+    public String logoutShopee() throws JsonProcessingException {
+        return shopeeService.logoutShopee();
+    }
+
+    @GetMapping("/carts")
+    public String getCartsShopee() throws JsonProcessingException {
         return shopeeService.getCartShopee();
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -24,10 +25,10 @@ import java.util.stream.Collectors;
 public class ShopeeService {
 
     @Autowired
-    @Qualifier("shopeeScrapingRestTemplate")
+    @Qualifier("ShopeeScrapingRestTemplate")
     private RestTemplate restTemplate;
 
-    @Autowired
+    @Resource
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -39,9 +40,10 @@ public class ShopeeService {
 
     private static final String SHOPEE_PHONE_NUMBER = "6282214687574";
     private static final String SHOPEE_PASSWORD = "a83605a6ad5b77aa27bd727673b5159dce99e524d061d94231f9f4a89940a4b3";
-    private static final String SHOPEE_SECURITY_DEVICE = "/is6wn8vzqC4L1ZWfvyC4A==|sFirq0y8QglN9xPXbUNrc6kLky7ohMV2VZR9kfc9DCZ+44f4m0VUFdLqb2d137oiFnR/S+L6Q92Tgk/H53zKEI0+GA==|T8asL6lLs+PEMggd|05|3";
+    private static final String SHOPEE_SECURITY_DEVICE = "80lK1X8Us7QrCiy2BKRW3g==|OB9gq3wt5KWkpGeIs8oCxj7ugowZ8F3K83BvXWeQaO1++4TbA1Q9YDAffEMTx4Fsk5X9e5nhmpFebrKIaao1LZVFdiHFd6C9kA==|te/UbEET4r5vFc8q|06|3";
 
     public String logoutShopee() throws JsonProcessingException {
+        log.info("LoginRequest -> {}",new Object());
         var logoutResponse = restTemplate.postForEntity(SHOPEE_LOGOUT_URL,ShopeeLoginRequestDto.builder().build(), String.class);
         log.info("LogoutResponse -> {}",objectMapper.writeValueAsString(logoutResponse));
         return objectMapper.writeValueAsString(logoutResponse.getBody());

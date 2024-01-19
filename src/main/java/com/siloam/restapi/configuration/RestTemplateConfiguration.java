@@ -13,7 +13,7 @@ public class RestTemplateConfiguration {
 
     @Bean
     @Qualifier("ServiceRestTemplate")
-    public RestTemplate getInterServiceRestTemplate() {
+    public RestTemplate getServiceRestTemplate() {
         return new RestTemplateBuilder()
                 .setReadTimeout(Duration.ofMillis(100000))
                 .setConnectTimeout(Duration.ofMillis(100000))
@@ -21,8 +21,8 @@ public class RestTemplateConfiguration {
     }
 
     @Bean()
-    @Qualifier("shopeeScrapingRestTemplate")
-    public RestTemplate restTemplate() {
+    @Qualifier("ShopeeScrapingRestTemplate")
+    public RestTemplate getShopeeScrapingRestTemplate() {
         return new RestTemplateBuilder()
                 .interceptors(new ShopeeScrapingInterceptor())
                 .build();
